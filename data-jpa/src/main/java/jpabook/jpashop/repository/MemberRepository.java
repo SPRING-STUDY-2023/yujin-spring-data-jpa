@@ -1,6 +1,7 @@
 package jpabook.jpashop.repository;
 
 import java.util.List;
+import java.util.Optional;
 import jpabook.jpashop.domain.Member;
 import jpabook.jpashop.dto.MemberDto;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -21,4 +22,10 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     @Query("select new jpabook.jpashop.dto.MemberDto(m.id, m.username, t.name) " +
             "from Member m join m.team t")
     List<MemberDto> findMemberDto();
+
+    @Query("select m from Member m where m.username = :name")
+    Member findMembers(@Param("name") String username);
+
+    @Query("select m from Member m where m.username in :names")
+    List<Member> findByNames(@Param("names") List<String> names);
 }
