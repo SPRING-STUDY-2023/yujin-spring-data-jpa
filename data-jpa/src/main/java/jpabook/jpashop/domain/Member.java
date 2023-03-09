@@ -7,6 +7,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.NamedAttributeNode;
+import jakarta.persistence.NamedEntityGraph;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import lombok.AccessLevel;
@@ -15,6 +17,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+@NamedEntityGraph(name = "Member.all", attributeNodes =
+@NamedAttributeNode("team"))
 @Entity
 @Getter
 @Setter
