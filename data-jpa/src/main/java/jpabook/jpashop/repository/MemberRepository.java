@@ -4,7 +4,12 @@ import java.util.List;
 import java.util.Optional;
 import jpabook.jpashop.domain.Member;
 import jpabook.jpashop.dto.MemberDto;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -28,4 +33,14 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     @Query("select m from Member m where m.username in :names")
     List<Member> findByNames(@Param("names") List<String> names);
+
+//    Page<Member> findByUsername(String name, Pageable pageable); //count 쿼리 사용
+//    Slice<Member> findByUsername(String name, Pageable pageable); //count 쿼리 사용안함
+//    List<Member> findByUsername(String name, Pageable pageable); //count 쿼리 사용안함
+//    List<Member> findByUsername(String name, Sort sort);
+
+    @Modifying(clearAutomatically = true) // 벌크성 수정, 삭제 쿼리는 영속성 초기화까지 해야함 (DB만 연산하고, 영속성 컨텍스트는 무시되고 실행됨)
+    @Query("update Member m set m.age = m.age + 1 where m.age >= :age")
+    int bulkAgePlus(@Param("age") int age);
+
 }
