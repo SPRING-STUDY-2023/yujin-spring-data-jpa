@@ -1,24 +1,21 @@
 package jpabook.jpashop.repository;
 
-import jakarta.persistence.LockModeType;
 import jakarta.persistence.QueryHint;
 import java.util.List;
-import java.util.Optional;
 import jpabook.jpashop.domain.Member;
 import jpabook.jpashop.dto.MemberDto;
+import jpabook.jpashop.dto.UsernameOnly;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Lock;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.QueryHints;
 import org.springframework.data.repository.query.Param;
 
-public interface MemberRepository extends JpaRepository<Member, Long> {
+public interface MemberRepository extends JpaRepository<Member, Long>, MemberRepositoryCustom {
     List<Member> findByUsernameAndAgeGreaterThan(String username, int age);
 
     List<Member> findTop3HelloBy();
@@ -76,4 +73,15 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
 //    @Lock(LockModeType.PESSIMISTIC_WRITE)
 //    List<Member> findByUsername(String name);
+    List<UsernameOnly> findProjectionsByUsername(String userName);
+
+    @Query(value = "select * from member where username = ?", nativeQuery = true)
+    Member findByNativeQuery(String username);
+
+
+//    @Query(value = "SELECT m.member_id as id, m.username, t.name as teamName " +
+//            "FROM member m left join team t ON m.team_id = t.team_id",
+//            countQuery = "SELECT count(*) from member",
+//            nativeQuery = true)
+//    Page<MemberProjection> findByNativeProjection(Pageable pageable);
 }
