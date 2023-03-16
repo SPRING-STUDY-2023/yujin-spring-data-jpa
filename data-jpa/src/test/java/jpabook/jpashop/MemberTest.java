@@ -2,7 +2,10 @@ package jpabook.jpashop;
 
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
+import java.util.List;
 import jpabook.jpashop.domain.Member;
+import jpabook.jpashop.domain.Team;
+import jpabook.jpashop.dto.UsernameOnly;
 import jpabook.jpashop.repository.MemberRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -50,4 +53,25 @@ public class MemberTest {
         System.out.println("findMember.updatedDate = " +
                 findMember.getUpdatedDate());
     }
+    @Test
+    public void projections() throws Exception {
+//given
+        Team teamA = new Team("teamA");
+        em.persist(teamA);
+        Member m1 = new Member("m1", 0, teamA);
+        Member m2 = new Member("m2", 0, teamA);
+        em.persist(m1);
+        em.persist(m2);
+        em.flush();
+        em.clear();
+//when
+        List<UsernameOnly> result =
+                memberRepository.findProjectionsByUsername("m1");
+
+
+//        List<UsernameOnly> result2 = memberRepository.findProjectionsByUsername("m1",UsernameOnly.class);
+//then
+        Assertions.assertThat(result.size()).isEqualTo(1);
+    }
+
 }

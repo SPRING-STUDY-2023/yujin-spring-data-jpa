@@ -4,6 +4,7 @@ import jakarta.persistence.QueryHint;
 import java.util.List;
 import jpabook.jpashop.domain.Member;
 import jpabook.jpashop.dto.MemberDto;
+import jpabook.jpashop.dto.UsernameOnly;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
@@ -72,4 +73,5 @@ public interface MemberRepository extends JpaRepository<Member, Long>, MemberRep
 
 //    @Lock(LockModeType.PESSIMISTIC_WRITE)
 //    List<Member> findByUsername(String name);
+    List<UsernameOnly> findProjectionsByUsername(String userName);
 }
